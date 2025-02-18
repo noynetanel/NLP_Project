@@ -1,3 +1,3 @@
-#Can AI Models Pass a Reverse Turing Test?
+*Can AI Models Pass a Reverse Turing Test?*
 
  We have chosen the default project idea outlined in 3.2: "Can models pass a reverse Turing test?" The goal is to investigate whether AI language models can identify if they are interacting with a human or another AI in a conversation. The setup involves conducting conversations where the model knows upfront that the responses could be from either a human or another model. The task includes designing creative experiments to test this capability, ensuring controlled and fair settings with diverse, high-quality inputs. If successful, the project may extend to investigating whether models can infer additional user attributes, such as age or gender, based on conversational patterns.
