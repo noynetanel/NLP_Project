@@ -1,0 +1,15 @@
+{
+  "name": "chat-game",
+  "version": "1.0.0",
+  "description": "Chat game with persona-driven bots using the OpenAI API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "openai": "^3.2.1",
+    "socket.io": "^4.6.1"
+  }
+}

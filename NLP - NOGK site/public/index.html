@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat Game: Human or AI?</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Chat Game</h1>
+    <!-- Chat container is hidden until Start is clicked -->
+    <div id="chatContainer" class="hidden">
+      <div id="chatMessages"></div>
+    </div>
+    <!-- Timer is hidden until Start is clicked -->
+    <div id="timer" class="hidden">120</div>
+    <div id="inputContainer">
+      <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+      <button id="sendButton" disabled>Send</button>
+    </div>
+    <div id="controls">
+      <button id="startButton">Start Chat</button>
+      <button id="restartButton" class="hidden">Restart</button>
+    </div>
+    <!-- Final analysis result will be displayed here -->
+    <div id="finalAnalysis"></div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
