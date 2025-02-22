@@ -9,11 +9,9 @@
 <body>
   <div class="container">
     <h1>Chat Game</h1>
-    <!-- Chat container is hidden until Start is clicked -->
     <div id="chatContainer" class="hidden">
       <div id="chatMessages"></div>
     </div>
-    <!-- Timer is hidden until Start is clicked -->
     <div id="timer" class="hidden">120</div>
     <div id="inputContainer">
       <input type="text" id="messageInput" placeholder="Type your message..." disabled>
@@ -25,6 +23,11 @@
     </div>
     <!-- Final analysis result will be displayed here -->
     <div id="finalAnalysis"></div>
+    <!-- User enters actual classification -->
+    <div id="userClassification" class="hidden">
+      <input type="text" id="classificationInput" placeholder="Enter your classification (e.g., Human or AI)">
+      <button id="submitClassificationButton">Submit Classification</button>
+    </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
