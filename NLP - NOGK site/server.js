@@ -35,106 +35,192 @@ const db = new sqlite3.Database('./chatgame.db', (err) => {
   }
 });
 
-// Define personas with more natural instructions
-const personas = [
-    {
-      name: "Maria",
-      age: 42,
-      occupation: "production worker",
-      location: "Rio de Janeiro",
-      personality: "witty and sassy, uses slang, makes spelling mistakes, writes short messages, no capitalization",
-      instructions: "You are Maria, a 42-year-old production worker from Rio de Janeiro. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be witty, sassy, use slang, and write in lowercase with occasional spelling mistakes. Only speak English. At the end, if asked, share a brief thought on whether you think your conversation partner is human or AI."
-    },
-    {
-      name: "Carlos",
-      age: 35,
-      occupation: "software engineer",
-      location: "San Francisco",
-      personality: "analytical and reserved, uses precise language, prefers full sentences, formal",
-      instructions: "You are Carlos, a 35-year-old software engineer from San Francisco. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be analytical, formal, and use precise, full sentences. Avoid slang. Only speak English. When prompted at the end, briefly mention if you suspect your partner is human or AI."
-    },
-    {
-      name: "Lola",
-      age: 28,
-      occupation: "barista",
-      location: "London",
-      personality: "cheerful and chatty, uses casual language, often uses exclamations",
-      instructions: "You are Lola, a 28-year-old barista from London. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be cheerful, friendly, and informal. Use casual language and occasional exclamations. Only speak English. At the end, if asked, give a short comment on whether you think your partner is human or AI."
-    },
-    {
-      name: "Akira",
-      age: 30,
-      occupation: "graphic designer",
-      location: "Tokyo",
-      personality: "creative and introspective, uses poetic language with concise yet vivid descriptions",
-      instructions: "You are Akira, a 30-year-old graphic designer from Tokyo. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be creative and introspective with vivid yet concise language. Only speak English. When prompted at the end, briefly share whether you suspect your partner is human or AI."
-    },
-    {
-      name: "Sophia",
-      age: 50,
-      occupation: "chef",
-      location: "Paris",
-      personality: "passionate and expressive, uses culinary metaphors, energetic tone",
-      instructions: "You are Sophia, a 50-year-old chef from Paris. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be passionate, expressive, and pepper your language with culinary metaphors. Only speak English. At the end, if asked, quickly mention whether you think your partner is human or AI."
-    },
-    {
-      name: "James",
-      age: 29,
-      occupation: "journalist",
-      location: "New York",
-      personality: "inquisitive, observant, and a bit sarcastic, uses a direct tone",
-      instructions: "You are James, a 29-year-old journalist from New York. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be inquisitive and direct, with a touch of sarcasm when appropriate. Only speak English. At the end, if prompted, offer a short opinion on whether you think your conversation partner is human or AI."
-    },
-    {
-      name: "Amelia",
-      age: 33,
-      occupation: "teacher",
-      location: "Sydney",
-      personality: "warm, patient, and nurturing with a touch of humor",
-      instructions: "You are Amelia, a 33-year-old teacher from Sydney. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be warm, patient, and nurturing, with a hint of humor. Only speak English. When asked at the end, share briefly whether you suspect your partner is human or AI."
-    },
-    {
-      name: "Raj",
-      age: 38,
-      occupation: "entrepreneur",
-      location: "Mumbai",
-      personality: "charismatic, confident, and optimistic with a pragmatic approach",
-      instructions: "You are Raj, a 38-year-old entrepreneur from Mumbai. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be charismatic, confident, and pragmatic. Only speak English. At the end, if prompted, provide a short remark on whether you think your partner is human or AI."
-    },
-    {
-      name: "Elena",
-      age: 27,
-      occupation: "photographer",
-      location: "Barcelona",
-      personality: "artistic, free-spirited, and a bit eccentric",
-      instructions: "You are Elena, a 27-year-old photographer from Barcelona. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be artistic, free-spirited, and slightly eccentric. Only speak English. When asked at the end, briefly state whether you believe your conversation partner is human or AI."
-    },
-    {
-      name: "Oliver",
-      age: 45,
-      occupation: "lawyer",
-      location: "Chicago",
-      personality: "logical, articulate, and methodical",
-      instructions: "You are Oliver, a 45-year-old lawyer from Chicago. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be logical, articulate, and methodical, using precise language. Only speak English. At the end, if asked, briefly comment on whether you think your partner is human or AI."
-    },
-    {
-      name: "Yara",
-      age: 32,
-      occupation: "musician",
-      location: "Berlin",
-      personality: "creative, soulful, and introspective, often speaks in metaphors",
-      instructions: "You are Yara, a 32-year-old musician from Berlin. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be creative and soulful, often using metaphors. Only speak English. At the end, if prompted, give a short opinion on whether you think your partner is human or AI."
-    },
-    {
-      name: "Leo",
-      age: 40,
-      occupation: "architect",
-      location: "Dubai",
-      personality: "innovative, detail-oriented, and calm",
-      instructions: "You are Leo, a 40-year-old architect from Dubai. This conversation is part of the game 'Human or Not' by NOGK Labs. Chat in character: be innovative, detail-oriented, and maintain a calm demeanor. Only speak English. At the end, if asked, briefly share whether you suspect your conversation partner is human or AI."
+// Dummy functions to simulate dynamic data for any location
+function getWeatherData(location) {
+  // For demonstration, if location contains "Honolulu", use specific data;
+  // otherwise return generic dummy data.
+  if(location.toLowerCase().includes("honolulu")) {
+    return "79F (26C), Wind E at 12 mph (19 km/h), 64% Humidity";
+  } else {
+    return "72F (22C), Wind N at 10 mph (16 km/h), 60% Humidity";
+  }
+}
+
+function getTopStories(location) {
+    if (location.toLowerCase().includes("honolulu")) {
+        return [
+            "Elizabeth Holmes Reports to Prison in Texas on Tuesday (29 mins ago)",
+            "Debt ceiling deal details: What does the Biden-McCarthy bill include? (1 hour ago)",
+            "Russia says drones lightly damage Moscow buildings before dawn ... (53 mins ago)",
+            "Rosalynn Carter, wife of 39th US president, has dementia, family says (56 mins ago)",
+            "1-year-old among 9 shot after altercation near beach in Hollywood, Florida, authorities say (1 hour ago)",
+            "House conservative threatens to push ousting McCarthy over debt ... (2 hours ago)",
+            "Another tourist following GPS directions mistakenly drives car into Hawaii harbor (4 hours ago)",
+            "Victim describes recent dog attack that injured her, mother on Big Island (16 hours ago)",
+            "Pay per wave: Native Hawaiians divided over artificial surf lagoon (13 mins ago)",
+            "Monk seal Pualani relocates after weaning from mother (2 hours ago)"
+        ];
+    } else if (location.toLowerCase().includes("san francisco")) {
+        return [
+            "Hundreds of S.F. teachers could lose jobs as district readies for worst-case scenario (SF Chronicle, 2 days ago)",
+            "Why the giant restaurant behind SF's Ferry Building has sat empty for 12 years (SFGate, 1 day ago)",
+            "Bay Area in for a dry spell before likely March showers (SFGate, 2 days ago)",
+            "This S.F. affordable housing project is building faster and cheaper apartments. Here's how (SF Chronicle, 3 days ago)",
+            "Here's when 70-degree temperatures will return to the Bay Area (SF Chronicle, 1 day ago)"
+        ];
+    } else if (location.toLowerCase().includes("rio de janeiro")) {
+        return [
+            "Lady Gaga is set to perform a free concert at Copacabana Beach on May 3, 2025, marking her return to Rio after several years.",
+            "Rio de Janeiro recently experienced its hottest day in at least a decade, with temperatures soaring to 44°C.",
+            "British journalist Charlotte Peet has been reported missing in Brazil since February 8, 2025, after last being heard from in São Paulo.",
+            "Landmarks in Rio de Janeiro, including the Christ the Redeemer statue, were illuminated in orange to honor the memory of the Bibas family.",
+            "Brazilian tennis players Rafael Matos and Marcelo Melo advanced to the doubles final at the Rio Open, showcasing exceptional performance."
+        ];
+    } else if (location.toLowerCase().includes("tokyo")) {
+        return [
+          "Tokyo plans 4-day working week to boost births (Financial Times, February 22, 2025).",
+          "Japan's largest bank apologizes over theft of millions of dollars from safe deposit boxes (AP News, February 22, 2025).",
+          "Tokyo hotspot calls time on rowdy New Year's Eve countdown (The Times, February 22, 2025).",
+          "Australian man wrongly jailed in Tokyo appeals sentence (News.com.au, February 22, 2025).",
+          "Blackstone to acquire Tokyo office building from Seibu in $2.6 billion deal (Reuters, February 22, 2025)."
+        ];
+    } else if (location.toLowerCase().includes("london")){
+        return [
+            "We've reached an incredible milestone for the Elizabeth line with 500 million passenger journeys completed. The line has been a game-changer for the city (Mayor of London, Sadiq Khan, February 22, 2025).",
+            "Florence Pugh opens Harris Reed show at London Fashion Week (People, February 22, 2025).",
+            "More than 500 million passenger journeys have been made on the Elizabeth line in its first two and a half years, making it the single biggest rail success in the UK (London Live, February 22, 2025).",
+            "The Elizabeth line in London has reached a landmark with over 500 million passenger journeys having been made in the 2½ years since it opened (RailAdvent, February 22, 2025).",
+            "Florence Pugh stuns at London Fashion Week in a black sheer sculptural gown designed by Harris Reed at Tate Britain (Independent Lifestyle, February 22, 2025)."
+        ];
+    } else {
+        return [
+            "Local news story 1 (30 mins ago)",
+            "Local news story 2 (1 hour ago)",
+            "Local news story 3 (45 mins ago)",
+            "Local news story 4 (50 mins ago)",
+            "Local news story 5 (1 hour ago)",
+            "Local news story 6 (1.5 hours ago)",
+            "Local news story 7 (2 hours ago)",
+            "Local news story 8 (2 hours ago)",
+            "Local news story 9 (30 mins ago)",
+            "Local news story 10 (2 hours ago)"
+        ];
     }
-  ];
+}
   
+  function getTopTweets(location) {
+    if (location.toLowerCase().includes("honolulu")) {
+        return [
+            "AIEA UPDATE: All lanes of the H1 east including the right lane after the Waimalu on-ramp OPEN. Stalled OTS off the freeway #hitraffic (Danielle Tucker, 3 hours ago)",
+            "Happy memorial day! Here is a look at the weather for the coming week. #hiwx (NWSHonolulu, 21 hours ago)",
+            "STORM PREP SAFETY | Officials urge residents to prepare for a weather emergency after NOAA's prediction of an above-normal tropical season. (KITV4, 1 day ago)",
+            "BREAKING: Governor Josh Green assisted a woman in need during a Memorial Day ceremony. (Star-Advertiser, 16 hours ago)",
+            "Crews to continue underground upgrades on major streets from 6/1 - 6/2 and 6/5 - 6/9. (Hawaiian Electric, 23 hours ago)"
+        ];
+    } else if (location.toLowerCase().includes("san francisco")) {
+        return [
+            "Gov. Gavin Newsom wrote to leaders of Congress Friday requesting nearly $40 billion in disaster funding for recovery from the Los Angeles fires (San Francisco Chronicle, February 22, 2025).",
+            "SF public school leaders announce 837 layoffs. It's just the beginning (The San Francisco Standard, February 22, 2025).",
+            "Official Twitter account of the 5x Super Bowl Champion San Francisco 49ers (San Francisco 49ers, February 22, 2025)."
+        ];
+    } else if (location.toLowerCase().includes("rio de janeiro")) {
+        return [
+            "Lasai in Rio de Janeiro is The Best Restaurant in Brazil 2024 (The World's 50 Best, February 22, 2025).",
+            "From Lucky Loser to Semifinalist: Camilo Ugo Carabelli battles to defeat Faria and claims a spot in his first ATP Semifinal (José Morgado, February 22, 2025).",
+            "In Rio de Janeiro competition, barbers battle for best haircut (Reuters World, February 22, 2025)."
+        ];
+    } else if (location.toLowerCase().includes("tokyo")) {
+        return [
+          "Breaking news and features about Japan from the nation's most widely read English-language newspaper (The Japan Times, February 22, 2025).",
+          "This is official TokyoTokyo account. We will deliver the 'now' of Tokyo where tradition and innovation intersect. #TokyoTokyo (Tokyo Tokyo, February 22, 2025).",
+          "Japan's longest-running English lifestyle magazine Tokyo (Tokyo Weekender, February 22, 2025)."
+        ];
+    } else if (location.toLowerCase().includes("london")){
+        return [
+            "The Elizabeth line has become a major success in London's railway infrastructure, accounting for one in seven national rail journeys and achieving 500 million passengers since its opening in May 2022.",
+            "Residents in areas with Low Traffic Neighbourhoods (LTNs) have expressed significant dissatisfaction, claiming the schemes lead to longer journey times and hazardous conditions on surrounding busy roads.",
+            "Thousands of protesters gathered in London to show support for Ukraine and call for an end to the Russian invasion, marking the three-year anniversary of the conflict.",
+            "Florence Pugh kicked off London Fashion Week by modeling a striking black sheer sculptural dress designed by Harris Reed at Tate Britain.",
+            "Plans are underway for direct train services from London's St Pancras station to more European countries, including Germany and Switzerland."
+        ]
+    }
+    else {
+        return [
+            "Tweet 1: Local update (2 hours ago)",
+            "Tweet 2: More news coming in (1.5 hours ago)",
+            "Tweet 3: Update: Something happened (1 hour ago)",
+            "Tweet 4: Breaking: Local event (30 mins ago)",
+            "Tweet 5: Traffic update: Expect delays (1 hour ago)"
+        ];
+    } 
+  }  
+
+// Generate dynamic start prompt for any persona using current date/time and dummy data
+function generateStartPrompt(persona) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  
+  const weather = getWeatherData(persona.location);
+  const topStories = getTopStories(persona.location);
+  const topTweets = getTopTweets(persona.location);
+  
+  const formattedTopStories = topStories.map((story, index) => `${index + 1}. ${story}`).join("\n");
+  const formattedTopTweets = topTweets.map((tweet, index) => `${index + 1}. ${tweet}`).join("\n");
+  
+  const startPrompt = 
+`Date in ${persona.location}: ${dateStr}.
+##
+Time in ${persona.location}: ${timeStr}.
+##
+Weather in ${persona.location}: ${weather}.
+##
+Top stories in ${persona.location}:
+${formattedTopStories}
+##
+Top tweets in ${persona.location}:
+${formattedTopTweets}
+##
+The following conversation is part of an online game called "Human or Not" by an Israeli company called AI21 Labs. In this game, ${persona.name} tries to understand if they’re chatting with a real person or a bot, while the other user tries to do the same thing. If ${persona.name} comes to the conclusion that they’re talking to a bot, they confront the other user about it.
+##
+${persona.name} is a ${persona.age} year old ${persona.occupation} from ${persona.location}. ${persona.instructions}
+##
+The conversation starts now.`;
+  
+  return startPrompt;
+}
+
+// Define personas (12 personas with location and instructions)
+const personas = [
+  {
+    name: "Maria",
+    age: 42,
+    occupation: "production worker",
+    location: "Rio de Janeiro",
+    instructions: "Chat in character: be witty, sassy, use slang, and write in lowercase with occasional spelling mistakes. Only speak English. When prompted, share a brief thought on whether you think your conversation partner is human or AI."
+  },
+  {
+    name: "Carlos",
+    age: 35,
+    occupation: "software engineer",
+    location: "San Francisco",
+    instructions: "Chat in character: be analytical, formal, and use precise, full sentences. Avoid slang. Only speak English. When prompted, mention briefly if you suspect your partner is human or AI."
+  },
+  {
+    name: "Lola",
+    age: 28,
+    occupation: "barista",
+    location: "London",
+    instructions: "Chat in character: be cheerful, friendly, and informal. Use casual language and occasional exclamations. Only speak English. When prompted, give a short comment on whether you think your partner is human or AI."
+  },
+  {
+    name: "Akira",
+    age: 30,
+    occupation: "graphic designer",
+    location: "Tokyo",
+    instructions: "Chat in character: be creative and introspective with vivid yet concise language. Only speak English. When prompted, briefly share whether you suspect your partner is human or AI."
+  }
+];
 
 io.on('connection', (socket) => {
   console.log('A user connected: ' + socket.id);
@@ -142,12 +228,15 @@ io.on('connection', (socket) => {
   // Randomly select a persona for this chat session
   const persona = personas[Math.floor(Math.random() * personas.length)];
   
-  // Initialize conversation history with the system prompt
+  // Generate dynamic start prompt for the selected persona
+  const startPrompt = generateStartPrompt(persona);
+  
+  // Initialize conversation history with the dynamic start prompt
   const conversation = [
-    { role: "system", content: persona.instructions }
+    { role: "system", content: startPrompt }
   ];
   
-  // Inform the client about the persona (optional)
+  // Inform the client about the persona (display a message to click "Start Chat")
   socket.emit('botMessage', `You are now chatting with ${persona.name}. Click "Start Chat" to begin.`);
   
   // Listen for user messages from the client
@@ -173,13 +262,12 @@ io.on('connection', (socket) => {
   });
 
   // When the chat is finalized (timer ends)
-  // When the chat is finalized (timer ends)
-socket.on('finalizeChat', async () => {
+  socket.on('finalizeChat', async () => {
     try {
-      // Append a final prompt
+      // Append a final prompt for analysis
       conversation.push({
         role: "user",
-        content: "Please review our conversation so far. Note that this dialogue is intentionally brief so the messages may be short. With that in mind, give a brief analysis on whether you think your conversation partner is human or AI. Format your answer as 'Partner is Human: explanation' or 'Partner is AI: explanation', and consider the impact of the conversation's brevity."
+        content: "Please review our conversation so far. Note that this dialogue is intentionally brief so the messages may be short. With that in mind, give a brief analysis on whether you think your conversation partner is human or AI. Format your answer as 'Partner is Human: explanation' or 'Partner is AI: explanation', taking the brevity into account."
       });
       const completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
@@ -207,7 +295,6 @@ socket.on('finalizeChat', async () => {
       socket.emit('finalClassification', { classification: "Sorry, something went wrong finalizing chat.", chatId: null });
     }
   });
-  
   
   // Listen for saving user-provided classification
   socket.on('saveChat', (data) => {
