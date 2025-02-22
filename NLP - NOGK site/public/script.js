@@ -9,9 +9,13 @@ const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
 const restartButton = document.getElementById('restartButton');
 const finalAnalysisDiv = document.getElementById('finalAnalysis');
+const userClassificationDiv = document.getElementById('userClassification');
+const classificationInput = document.getElementById('classificationInput');
+const submitClassificationButton = document.getElementById('submitClassificationButton');
 
 let timeLeft = 120; // 2 minutes countdown
 let timerInterval = null;
+let currentChatId = null;  // to store the chat ID returned by the server
 
 // Function to append messages to the chat window
 function addMessage(content, sender) {
@@ -38,6 +42,26 @@ restartButton.addEventListener('click', () => {
   location.reload();
 });
 
+// Send message on button click
+sendButton.addEventListener('click', sendMessage);
+
+// Also send message when pressing Enter in the message input
+messageInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+function sendMessage() {
+  const msg = messageInput.value.trim();
+  if (msg === "") return;
+  
+  addMessage(msg, 'user');
+  socket.emit('userMessage', msg);
+  messageInput.value = "";
+}
+
 // Start the 2-minute countdown timer
 function startTimer() {
   timeLeft = 120;
@@ -62,23 +86,33 @@ function endChat() {
   socket.emit('finalizeChat');
 }
 
-// Send message on button click
-sendButton.addEventListener('click', () => {
-  const msg = messageInput.value.trim();
-  if (msg === "") return;
-  
-  addMessage(msg, 'user');
-  socket.emit('userMessage', msg);
-  messageInput.value = "";
-});
-
 // Listen for bot messages from the server
 socket.on('botMessage', (msg) => {
   addMessage(msg, 'bot');
 });
 
-// Receive the final analysis from the server and display it
-socket.on('finalClassification', (analysis) => {
-  addMessage(analysis, 'bot');
-  finalAnalysisDiv.textContent = "Final Analysis: " + analysis;
+// When final classification is received from the server, show the user classification input
+socket.on('finalClassification', (data) => {
+  const { classification, chatId } = data;
+  addMessage(classification, 'bot');
+  finalAnalysisDiv.textContent = "Final Analysis: " + classification;
+  currentChatId = chatId;
+  // Reveal the actual classification input so the user can provide their classification
+  userClassificationDiv.classList.remove('hidden');
+});
+
+
+// Listen for response after saving chat
+socket.on('saveChatResponse', (response) => {
+  alert(response);
+});
+
+// Handle user submitting actual classification
+submitClassificationButton.addEventListener('click', () => {
+  const actualClassification = classificationInput.value.trim();
+  if (actualClassification === "" || currentChatId === null) return;
+  socket.emit('saveChat', { chatId: currentChatId, actualClassification });
+  // Optionally, disable the classification input after submission
+  classificationInput.disabled = true;
+  submitClassificationButton.disabled = true;
 });
