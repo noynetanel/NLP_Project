@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Chat Humanizer Extension",
+    "version": "1.0",
+    "description": "Replies in the chat to appear human.",
+    "permissions": ["activeTab", "scripting", "storage"],
+    "host_permissions": [
+      "http://*/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["http://*/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
