@@ -15,9 +15,20 @@ const submitClassificationButton = document.getElementById('submitClassification
 
 let timeLeft = 120; // 2 minutes countdown
 let timerInterval = null;
-let currentChatId = null;  // to store the chat ID returned by the server
+let currentChatId = null;  // will store the chat DB ID
 
-// Function to append messages to the chat window
+// Recursive typeMessage function to simulate natural typing
+function typeMessage(input, message, index = 0) {
+  if (index < message.length) {
+    input.value += message.charAt(index);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    setTimeout(() => {
+      typeMessage(input, message, index + 1);
+    }, 100);
+  }
+}
+
+// Append message to chat window
 function addMessage(content, sender) {
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message', sender);
@@ -26,10 +37,9 @@ function addMessage(content, sender) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Start chat when Start button is clicked
+// Start chat on Start button click (only once)
 startButton.addEventListener('click', () => {
   startButton.classList.add('hidden');
-  // Show chat area and timer
   chatContainer.classList.remove('hidden');
   timerDisplay.classList.remove('hidden');
   messageInput.disabled = false;
@@ -37,15 +47,13 @@ startButton.addEventListener('click', () => {
   startTimer();
 });
 
-// Restart chat when Restart button is clicked (reloads the page)
+// Restart chat by reloading the page
 restartButton.addEventListener('click', () => {
   location.reload();
 });
 
-// Send message on button click
+// Manual send message on click or Enter key
 sendButton.addEventListener('click', sendMessage);
-
-// Also send message when pressing Enter in the message input
 messageInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
@@ -62,7 +70,7 @@ function sendMessage() {
   messageInput.value = "";
 }
 
-// Start the 2-minute countdown timer
+// Start the timer (only once)
 function startTimer() {
   timeLeft = 120;
   timerDisplay.textContent = timeLeft;
@@ -76,13 +84,11 @@ function startTimer() {
   }, 1000);
 }
 
-// When timer ends, disable input, show restart button, and ask for final analysis
+// When timer ends, disable input and request final classification
 function endChat() {
   messageInput.disabled = true;
   sendButton.disabled = true;
   restartButton.classList.remove('hidden');
-  
-  // Ask server for final analysis regarding partner's identity
   socket.emit('finalizeChat');
 }
 
@@ -91,28 +97,26 @@ socket.on('botMessage', (msg) => {
   addMessage(msg, 'bot');
 });
 
-// When final classification is received from the server, show the user classification input
+// When final classification is received, show classification input
 socket.on('finalClassification', (data) => {
   const { classification, chatId } = data;
   addMessage(classification, 'bot');
   finalAnalysisDiv.textContent = "Final Analysis: " + classification;
   currentChatId = chatId;
-  // Reveal the actual classification input so the user can provide their classification
+  classificationInput.value = "";
   userClassificationDiv.classList.remove('hidden');
 });
 
-
-// Listen for response after saving chat
-socket.on('saveChatResponse', (response) => {
-  alert(response);
-});
-
-// Handle user submitting actual classification
+// Handle submit classification button click
 submitClassificationButton.addEventListener('click', () => {
   const actualClassification = classificationInput.value.trim();
-  if (actualClassification === "" || currentChatId === null) return;
+  if (actualClassification === "" || currentChatId === null) {
+    alert("Please enter a classification.");
+    return;
+  }
   socket.emit('saveChat', { chatId: currentChatId, actualClassification });
-  // Optionally, disable the classification input after submission
+  console.log("Submitted classification:", actualClassification, "for chat ID:", currentChatId);
+  // Disable the input after submission
   classificationInput.disabled = true;
   submitClassificationButton.disabled = true;
 });
